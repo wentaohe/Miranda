@@ -6,6 +6,12 @@ authors = ["Nikolai McFall <nikolai.mcfall@gmail.com>", "Wentao He <wentao0813@g
 
 [tool.poetry.dependencies]
 python = "^3.8"
+pvporcupine = "^2.1.2"
+geocoder = "^1.38.1"
+pyttsx3 = "^2.90"
+scikit-learn = "^1.0.2"
+pandas = "^1.4.1"
+requests = "^2.27.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
