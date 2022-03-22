@@ -37,8 +37,8 @@ command to run if program contains helper info
 
 Contributors names and contact info
 
-[Nikolai Mcfall](https://github.com/nik12mcf)
-[Wentao He](https://github.com/wentaohe)
+- [Nikolai Mcfall](https://github.com/nik12mcf)
+- [Wentao He](https://github.com/wentaohe)
 
 ## Version History
 
@@ -54,3 +54,4 @@ This project is licensed under the [![License: MIT](https://img.shields.io/badge
 Inspiration, code snippets, etc.
 * [How to Make Your Own Private Virtual Assistant Powered by Machine Learning in Python](https://medium.com/analytics-vidhya/privacy-virtual-assistant-powered-by-machine-learning-in-python-32578e0d56be)
 * [Assisant by Reyansh Bahl](https://github.com/reybahl/Assistant)
+* [JarvisAI](https://github.com/Dipeshpal/Jarvis-Assisant)
