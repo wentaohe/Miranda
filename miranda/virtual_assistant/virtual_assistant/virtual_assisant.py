@@ -3,7 +3,7 @@ import pyaudio
 from assistant_functions.speak_listen import speak_listen
 from intent_classification.intent_classification import IntentClassifier
 from assistant_functions.reply import reply
-from assistant_functions.weather import weather
+# from assistant_functions.weather import weather
 from assistant_functions.location import location
 from assistant_functions.open_browser import assistant_browser
 import struct
@@ -23,7 +23,7 @@ class Assistant:
             'greeting' : reply,
             'insult' : reply,
             'personal_q' : reply,
-            'weather' : weather.main,
+            # 'weather' : weather.main,
             'location' : location.main,
             'open_in_browser':assistant_browser.main,
             }

@@ -9,7 +9,7 @@ class Speak_Listen:
         self.speech_engine.setProperty("rate", 150)
 
         self.r = sr.Recognizer()
-        self.mic = sr.Microphone(device_index=2)
+        self.mic = sr.Microphone(device_index=1)
 
     def say(self, text):
         """Uses pyttsx3 engine text-to-speech to to say 'text' argument"""
