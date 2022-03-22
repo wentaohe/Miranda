@@ -28,7 +28,7 @@ class SpeakToMe:
 
     def listen_to_me(self):
 
-        text = "Fuck you Nikolai, you suck, at least I got mine to partially work!"
+        text = "Good day Wentao! Let us fuck some shit up!"
         self.SpeakText(text, voice_id=self.voice_id,
                        driver_name=self.driver_name)
 
