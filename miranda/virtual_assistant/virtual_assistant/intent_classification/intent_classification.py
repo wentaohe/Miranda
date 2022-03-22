@@ -10,7 +10,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 
 class IntentClassifier:
     def __init__(self):
-        self.data = pd.read_csv('intentclassification/data.csv')
+        self.data = pd.read_csv('virtual_assistant/intent_classification/data.csv')
         self.train()
 
     def train(self):
