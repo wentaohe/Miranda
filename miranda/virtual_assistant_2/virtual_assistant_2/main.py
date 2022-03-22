@@ -1,177 +1,94 @@
-import requests
-from functions.online_ops import find_my_ip, get_latest_news, get_random_advice, get_random_joke, get_trending_movies, get_weather_report, play_on_youtube, search_on_google, search_on_wikipedia, send_email, send_whatsapp_message
-import pyttsx3
+import sys
 import speech_recognition as sr
-from decouple import config
-from datetime import datetime
-from functions.os_ops import open_calculator, open_camera, open_cmd, open_notepad, open_discord
-from random import choice
-from utils import opening_text
-from pprint import pprint
+import pyttsx3
+
+# Initialize the recognizer
+r = sr.Recognizer()
 
 
-USERNAME = config('USER')
-BOTNAME = config('BOTNAME')
+class SpeakToMe:
+    def __init__(self) -> None:
+        self.voice_id = 'com.apple.speech.synthesis.voice.ava.premium'
+        self.driver_name = 'nsss'
+        self.speech_lang = 'en_US'
+
+    @staticmethod
+    def SpeakText(my_command: str = None, driver_name: str = 'nsss',
+                  voice_id: str = 'com.apple.speech.synthesis.voice.ava.premium'):
+        try:
+            # Initialize the engine
+            if my_command is None:
+                return
+            engine = pyttsx3.init(driverName=driver_name)
+            engine.setProperty('voice', voice_id)
+            engine.say(my_command)
+            engine.runAndWait()
+        except Exception as e:
+            print(e)
+
+    def listen_to_me(self):
+
+        text = "Fuck you Nikolai, you suck, at least I got mine to partially work!"
+        self.SpeakText(text, voice_id=self.voice_id,
+                       driver_name=self.driver_name)
+
+        # Loop infinitely for user to
+        # speak
+        while(True):
+            try:
+
+                # use the microphone as source for input.
+                with sr.Microphone() as source:
+                    # wait for a second to let the recognizer
+                    # adjust the energy threshold based on
+                    # the surrounding noise level
+                    r.adjust_for_ambient_noise(source, duration=0.2)
+
+                    # listens for the user's input
+                    audio = r.listen(source)
+
+                    # Using google to recognize audio
+                    my_text = r.recognize_google(
+                        audio, language=self.speech_lang)
+                    my_text = my_text.lower()
+
+                    self.yes_minion(my_command=my_text)
+
+                    my_text = ""
+
+            except sr.RequestError as e:
+                print(f"Could not request results; {e}")
+            except sr.UnknownValueError as e:
+                pass
+            except Exception as e:
+                print(f"Error: ' {e} ' occured!")
+
+    def yes_minion(self, my_command: str = None):
+        if my_command is None:
+            return
+
+        system_call = ['hello', 'hallo']
+        if my_command in system_call:
+            sorry = "Yes Sir?"
+            self.SpeakText(sorry, voice_id=self.voice_id,
+                           driver_name=self.driver_name)
+            return
+
+        shutdown = ['shut down', 'shutdown']
+        if my_command in shutdown:
+            talk = "Shutting down in 3.....2.....1"
+            self.SpeakText(talk, voice_id=self.voice_id,
+                           driver_name=self.driver_name)
+            sys.exit()
+
+        sorry = "Sorry sir, I do not understand you. Could you refrase that question?"
+        self.SpeakText(sorry, voice_id=self.voice_id,
+                       driver_name=self.driver_name)
 
 
-engine = pyttsx3.init('sapi5')
+if __name__ == "__main__":
+    #call the class 
+    stm = SpeakToMe()
 
-# Set Rate
-engine.setProperty('rate', 190)
-
-# Set Volume
-engine.setProperty('volume', 1.0)
-
-# Set Voice (Female)
-voices = engine.getProperty('voices')
-engine.setProperty('voice', voices[1].id)
-
-
-# Text to Speech Conversion
-def speak(text):
-    """Used to speak whatever text is passed to it"""
-
-    engine.say(text)
-    engine.runAndWait()
-
-
-# Greet the user
-def greet_user():
-    """Greets the user according to the time"""
-    
-    hour = datetime.now().hour
-    if (hour >= 6) and (hour < 12):
-        speak(f"Good Morning {USERNAME}")
-    elif (hour >= 12) and (hour < 16):
-        speak(f"Good afternoon {USERNAME}")
-    elif (hour >= 16) and (hour < 19):
-        speak(f"Good Evening {USERNAME}")
-    speak(f"I am {BOTNAME}. How may I assist you?")
-
-
-# Takes Input from User
-def take_user_input():
-    """Takes user input, recognizes it using Speech Recognition module and converts it into text"""
-    
-    r = sr.Recognizer()
-    with sr.Microphone() as source:
-        print('Listening....')
-        r.pause_threshold = 1
-        audio = r.listen(source)
-
-    try:
-        print('Recognizing...')
-        query = r.recognize_google(audio, language='en-in')
-        if not 'exit' in query or 'stop' in query:
-            speak(choice(opening_text))
-        else:
-            hour = datetime.now().hour
-            if hour >= 21 and hour < 6:
-                speak("Good night sir, take care!")
-            else:
-                speak('Have a good day sir!')
-            exit()
-    except Exception:
-        speak('Sorry, I could not understand. Could you please say that again?')
-        query = 'None'
-    return query
-
-
-if __name__ == '__main__':
-    greet_user()
-    while True:
-        query = take_user_input().lower()
-
-        if 'open notepad' in query:
-            open_notepad()
-
-        elif 'open discord' in query:
-            open_discord()
-
-        elif 'open command prompt' in query or 'open cmd' in query:
-            open_cmd()
-
-        elif 'open camera' in query:
-            open_camera()
-
-        elif 'open calculator' in query:
-            open_calculator()
-
-        elif 'ip address' in query:
-            ip_address = find_my_ip()
-            speak(f'Your IP Address is {ip_address}.\n For your convenience, I am printing it on the screen sir.')
-            print(f'Your IP Address is {ip_address}')
-
-        elif 'wikipedia' in query:
-            speak('What do you want to search on Wikipedia, sir?')
-            search_query = take_user_input().lower()
-            results = search_on_wikipedia(search_query)
-            speak(f"According to Wikipedia, {results}")
-            speak("For your convenience, I am printing it on the screen sir.")
-            print(results)
-
-        elif 'youtube' in query:
-            speak('What do you want to play on Youtube, sir?')
-            video = take_user_input().lower()
-            play_on_youtube(video)
-
-        elif 'search on google' in query:
-            speak('What do you want to search on Google, sir?')
-            query = take_user_input().lower()
-            search_on_google(query)
-
-        elif "send whatsapp message" in query:
-            speak(
-                'On what number should I send the message sir? Please enter in the console: ')
-            number = input("Enter the number: ")
-            speak("What is the message sir?")
-            message = take_user_input().lower()
-            send_whatsapp_message(number, message)
-            speak("I've sent the message sir.")
-
-        elif "send an email" in query:
-            speak("On what email address do I send sir? Please enter in the console: ")
-            receiver_address = input("Enter email address: ")
-            speak("What should be the subject sir?")
-            subject = take_user_input().capitalize()
-            speak("What is the message sir?")
-            message = take_user_input().capitalize()
-            if send_email(receiver_address, subject, message):
-                speak("I've sent the email sir.")
-            else:
-                speak("Something went wrong while I was sending the mail. Please check the error logs sir.")
-
-        elif 'joke' in query:
-            speak(f"Hope you like this one sir")
-            joke = get_random_joke()
-            speak(joke)
-            speak("For your convenience, I am printing it on the screen sir.")
-            pprint(joke)
-
-        elif "advice" in query:
-            speak(f"Here's an advice for you, sir")
-            advice = get_random_advice()
-            speak(advice)
-            speak("For your convenience, I am printing it on the screen sir.")
-            pprint(advice)
-
-        elif "trending movies" in query:
-            speak(f"Some of the trending movies are: {get_trending_movies()}")
-            speak("For your convenience, I am printing it on the screen sir.")
-            print(*get_trending_movies(), sep='\n')
-
-        elif 'news' in query:
-            speak(f"I'm reading out the latest news headlines, sir")
-            speak(get_latest_news())
-            speak("For your convenience, I am printing it on the screen sir.")
-            print(*get_latest_news(), sep='\n')
-
-        elif 'weather' in query:
-            ip_address = find_my_ip()
-            city = requests.get(f"https://ipapi.co/{ip_address}/city/").text
-            speak(f"Getting weather report for your city {city}")
-            weather, temperature, feels_like = get_weather_report(city)
-            speak(f"The current temperature is {temperature}, but it feels like {feels_like}")
-            speak(f"Also, the weather report talks about {weather}")
-            speak("For your convenience, I am printing it on the screen sir.")
-            print(f"Description: {weather}\nTemperature: {temperature}\nFeels like: {feels_like}")
+    # start python to listnen to you!
+    stm.listen_to_me()
