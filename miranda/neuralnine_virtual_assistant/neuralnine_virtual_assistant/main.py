@@ -1,8 +1,10 @@
 from abc import ABCMeta, abstractmethod
-
+import speech_recognition
 import random
 import json
 import pickle
+import pyttsx3 as tts
+from tempfile import TemporaryFile
 import numpy as np
 import os
 
@@ -18,6 +20,14 @@ from tensorflow.keras.models import load_model
 
 nltk.download('punkt', quiet=True)
 nltk.download('wordnet', quiet=True)
+nltk.download('omw-1.4', quiet=True)
+
+recognizer = speech_recognition.Recognizer()
+
+speaker = tts.init()
+speaker.setProperty('rate', 150)
+#speaker.say("Hello")
+#speaker.runAndWait()
 
 class IAssistant(metaclass=ABCMeta):
 
@@ -185,3 +195,50 @@ class GenericAssistant(IAssistant):
             self.intent_methods[ints[0]['intent']]()
         else:
             return self._get_response(ints, self.intents)
+
+##############################################################################################################
+##############################################################################################################
+
+def function_for_greetings():
+    speaker.say("Hello how are you doing!")
+    speaker.runAndWait()
+    # Some action you want to take
+
+def function_for_stocks():
+    speaker.say("You own the following shares: ABBV, AAPL, FB, NVDA and an ETF of the S&P 500 Index!")
+    speaker.runAndWait()
+    # Some action you want to take
+
+def function_for_goodbye():
+    speaker.say("Sad to see you go :(")
+    speaker.runAndWait()
+
+mappings = {'greeting' : function_for_greetings, 'stocks' : function_for_stocks, 'goodbye' : function_for_goodbye}
+
+assistant = GenericAssistant('intents.json', intent_methods=mappings ,model_name="test_model")
+assistant.train_model()
+assistant.save_model()
+
+# done = False
+
+# while not done:
+#     message = input("Enter a message: ")
+#     if message == "STOP":
+#         done = True 
+#     else:
+        # assistant.request(message)
+speaker.say("I am become aware. Hello master Nikolai.")
+speaker.runAndWait()
+
+while True:
+    try:
+        with speech_recognition.Microphone() as mic:
+            recognizer.adjust_for_ambient_noise(mic, duration=0.2)
+            audio = recognizer.listen(mic)
+
+            message = recognizer.recognize_google(audio)
+            message = message.lower()
+
+        assistant.request(message)
+    except speech_recognition.UnknownValueError:
+        recognizer = speech_recognition.Recognizer()
