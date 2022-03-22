@@ -26,9 +26,18 @@ nltk.download('omw-1.4', quiet=True)
 recognizer = speech_recognition.Recognizer()
 
 speaker = tts.init()
-speaker.setProperty('rate', 150)
-#speaker.say("Hello")
-#speaker.runAndWait()
+speaker.setProperty('rate', 175)
+speaker.setProperty('voice', 'com.apple.speech.synthesis.voice.Fred')
+
+# engine = tts.init()
+# engine.setProperty('rate', 175)
+# voices = engine.getProperty('voices')
+# for voice in voices:
+#     print(voice, voice.id)
+#     engine.setProperty('voice', voice.id)
+#     engine.say("Hello World!")
+#     engine.runAndWait()
+#     engine.stop()
 
 class IAssistant(metaclass=ABCMeta):
 
