@@ -7,6 +7,7 @@ import pyttsx3 as tts
 from tempfile import TemporaryFile
 import numpy as np
 import os
+import sys
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
@@ -212,12 +213,66 @@ def function_for_stocks():
 def function_for_goodbye():
     speaker.say("Sad to see you go :(")
     speaker.runAndWait()
+    sys.exit(0)
 
-mappings = {'greeting' : function_for_greetings, 'stocks' : function_for_stocks, 'goodbye' : function_for_goodbye}
+def function_for_exavault_constructor():
+    global recognizer
+
+    speaker.say("Running Exavault Constructor 1.0.0.")
+
+    done = False
+    while not done:
+        try:
+            with speech_recognition.Microphone() as mic:
+                speaker.say("What is your name?")
+                speaker.runAndWait()
+                recognizer.adjust_for_ambient_noise(mic, duration=0.2)
+                audio = recognizer.listen(mic)
+
+                name = recognizer.recognize_google(audio)
+                name = name.lower()
+
+                speaker.say(f"Hello {name} what is your email?")
+                speaker.runAndWait()
+                recognizer.adjust_for_ambient_noise(mic, duration=0.2)
+                audio = recognizer.listen(mic)
+
+                email = recognizer.recognize_google(audio)
+                email = email.lower()
+
+                speaker.say(f"What is the cherry version?")
+                speaker.runAndWait()
+                recognizer.adjust_for_ambient_noise(mic, duration=0.2)
+                audio = recognizer.listen(mic)
+
+                cherre_version = recognizer.recognize_google(audio)
+                cherre_version = cherre_version.lower()
+
+                speaker.say(f"What is the project name?")
+                speaker.runAndWait()
+                recognizer.adjust_for_ambient_noise(mic, duration=0.2)
+                audio = recognizer.listen(mic)
+
+                project_name = recognizer.recognize_google(audio)
+                project_name = project_name.lower()
+
+                speaker.say(f"Congratz {name}, successfully created exavault {project_name} for cherry version {cherre_version}!")
+                speaker.runAndWait()
+
+                done = True
+        except speech_recognition.UnknownValueError:
+            recognizer = speech_recognition.Recognizer()
+            speaker.say(f"Sorry I did not catch that.")
+            speaker.runAndWait()
+        
+        # except speech_recognition.UnknownValueError:
+        #     recognizer = speech_recognition.Recognizer()
+
+mappings = {'greeting' : function_for_greetings, 'stocks' : function_for_stocks, 'goodbye' : function_for_goodbye, 'exavault_constructor' : function_for_exavault_constructor}
 
 assistant = GenericAssistant('intents.json', intent_methods=mappings ,model_name="test_model")
 assistant.train_model()
-assistant.save_model()
+# assistant.save_model()
 
 # done = False
 
