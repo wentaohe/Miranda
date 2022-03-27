@@ -18,6 +18,11 @@
       "patterns": ["run exavault constructor", "exavault constructor", "execute exavault constructor"],
       "responses": ["Running Exavault Constructor 1.0.0!"],
       "context_set": ""
+    },
+    {"tag": "beautiful_girl",
+      "patterns": ["most beautiful girl", "who is the most beautiful girl"],
+      "responses": ["According to my calculations, Amanda Jacobs is the most beautiful girl in the world!"],
+      "context_set": ""
     }
   ]
   }
