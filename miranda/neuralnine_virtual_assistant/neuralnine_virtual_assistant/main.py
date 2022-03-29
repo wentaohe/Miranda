@@ -1,7 +1,5 @@
 from virtual_assistant import GenericAssistant
 
-class 
-
 if __name__ == "__main__":
     assistant = GenericAssistant('intents.json', model_name="test_model")
     assistant.train_model()
