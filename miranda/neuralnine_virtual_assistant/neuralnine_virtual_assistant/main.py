@@ -1,21 +1,23 @@
 from virtual_assistant import GenericAssistant
+import pyttsx3 as tts
+import speech_recognition
 
 if __name__ == "__main__":
     assistant = GenericAssistant('intents.json', model_name="test_model")
     assistant.train_model()
 
-    done = False
+    # done = False
 
-    while not done:
-        message = input("Enter a message: ")
-        if message == "STOP":
-            done = True 
-        else:
-            assistant.request(message)
+    # while not done:
+    #     message = input("Enter a message: ")
+    #     if message == "STOP":
+    #         done = True 
+    #     else:
+    #         assistant.request(message)
 
-    # speaker = tts.init()
-    # speaker.setProperty('rate', 165)
-    # speaker.setProperty('voice', 'com.apple.speech.synthesis.voice.Fred')
+    speaker = tts.init()
+    speaker.setProperty('rate', 165)
+    #speaker.setProperty('voice', 'com.apple.speech.synthesis.voice.Fred')
 
     # engine = tts.init()
     # engine.setProperty('rate', 175)
@@ -27,21 +29,22 @@ if __name__ == "__main__":
     #     engine.runAndWait()
     #     engine.stop()
 
+    recognizer = speech_recognition.Recognizer()
     ########################################################################################################
     ########################################################################################################
 
-    # speaker.say("I am become aware. Hello master Nikolai.")
-    # speaker.runAndWait()
+    speaker.say("I am become aware. Hello master Nikolai.")
+    speaker.runAndWait()
 
-    # while True:
-    #     try:
-    #         with speech_recognition.Microphone() as mic:
-    #             recognizer.adjust_for_ambient_noise(mic, duration=0.2)
-    #             audio = recognizer.listen(mic)
+    while True:
+        try:
+            with speech_recognition.Microphone() as mic:
+                recognizer.adjust_for_ambient_noise(mic, duration=0.2)
+                audio = recognizer.listen(mic)
 
-    #             message = recognizer.recognize_google(audio)
-    #             message = message.lower()
+                message = recognizer.recognize_google(audio)
+                message = message.lower()
 
-    #         assistant.request(message)
-    #     except speech_recognition.UnknownValueError:
-    #         recognizer = speech_recognition.Recognizer()
+            assistant.request(message)
+        except speech_recognition.UnknownValueError:
+            recognizer = speech_recognition.Recognizer()
